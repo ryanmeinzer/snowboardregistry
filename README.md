@@ -55,3 +55,9 @@ pnpm dev
 ```
 
 Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples) ([Documentation](https://nextjs.org/docs/deployment)).
+
+To interact with Vercel PG in CLI (secret hidden):
+
+```
+psql "psql "postgres://default:************@ep-morning-sky-a4gu1riu.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&options=endpoint%3Dep-morning-sky-a4gu1riu"
+```
