@@ -2,18 +2,26 @@
 
 import { useState } from 'react';
 
+interface Snowboard {
+  serial_number: string;
+  make: string;
+  model: string;
+  size: number;
+  email: string | null;
+}
+
 const MainForm = () => {
   const [serial, setSerial] = useState('');
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [size, setSize] = useState('');
   const [email, setEmail] = useState('');
-  const [snowboard, setSnowboard] = useState(null);
+  const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
 
   const handleSerialSubmit = async () => {
     const response = await fetch(`/api/snowboard/[serial]?serial=${serial}`);
     if (response.status === 200) {
-      const data = await response.json();
+      const data: Snowboard = await response.json();
       setSnowboard(data);
     } else {
       setSnowboard(null);
