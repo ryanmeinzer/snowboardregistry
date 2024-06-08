@@ -19,7 +19,8 @@ const MainForm = () => {
   const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
 
   const handleSerialSubmit = async () => {
-    const response = await fetch(`/api/snowboard/[serial]?serial=${serial}`);
+    // Construct the URL with the actual serial number
+    const response = await fetch(`/api/snowboard/${serial}`);
     if (response.status === 200) {
       const data: Snowboard = await response.json();
       setSnowboard(data);
