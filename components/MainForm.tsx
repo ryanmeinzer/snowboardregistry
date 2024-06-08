@@ -17,16 +17,22 @@ const MainForm = () => {
   const [size, setSize] = useState('');
   const [email, setEmail] = useState('');
   const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
+  const [notFound, setNotFound] = useState(false); // Track if snowboard is not found
+  const [showSubmit, setShowSubmit] = useState(true); // Track if the submit button should be shown
+  const [isSerialDisabled, setIsSerialDisabled] = useState(false); // Track if the serial number field should be disabled
 
   const handleSerialSubmit = async () => {
-    // Construct the URL with the actual serial number
     const response = await fetch(`/api/snowboard/${serial}`);
     if (response.status === 200) {
       const data: Snowboard = await response.json();
       setSnowboard(data);
+      setNotFound(false); // Reset not found state
+      setIsSerialDisabled(true); // Disable the serial number field
     } else {
       setSnowboard(null);
+      setNotFound(true); // Set not found state
     }
+    setShowSubmit(false); // Hide the submit button
   };
 
   const handleRegister = async () => {
@@ -47,6 +53,17 @@ const MainForm = () => {
     alert('Email updated successfully');
   };
 
+  const handleFound = async () => {
+    if (snowboard?.email) {
+      await fetch('/api/snowboard/found', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serial_number: serial }),
+      });
+      alert(`Notification sent to ${snowboard.email}`);
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Register or Find Snowboard</h1>
@@ -56,9 +73,13 @@ const MainForm = () => {
         placeholder="Serial Number"
         value={serial}
         onChange={(e) => setSerial(e.target.value)}
+        disabled={isSerialDisabled} // Disable the serial number field if needed
       />
-      <button className="bg-blue-500 text-white p-2 mb-4" onClick={handleSerialSubmit}>Submit</button>
-      {snowboard === null && (
+      {showSubmit && (
+        <button className="bg-blue-500 text-white p-2 mb-4" onClick={handleSerialSubmit}>Submit</button>
+      )}
+      
+      {notFound && (
         <>
           <input
             type="text"
@@ -91,6 +112,7 @@ const MainForm = () => {
           <button className="bg-blue-500 text-white p-2" onClick={handleRegister}>Register</button>
         </>
       )}
+
       {snowboard && (
         <>
           <input
@@ -121,10 +143,13 @@ const MainForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {!snowboard.email ? (
-            <button className="bg-blue-500 text-white p-2" onClick={handleUpdateEmail}>Register</button>
+          {snowboard.email ? (
+            <button className="bg-blue-500 text-white p-2" onClick={handleFound} disabled={!email}>Found</button>
           ) : (
-            <button className="bg-blue-500 text-white p-2" onClick={handleUpdateEmail} disabled={!email}>Found</button>
+            <>
+              <button className="bg-blue-500 text-white p-2" onClick={handleUpdateEmail} disabled={!email}>Register</button>
+              <button className="bg-blue-500 text-white p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
+            </>
           )}
         </>
       )}
