@@ -1,5 +1,5 @@
-import { sql } from '@vercel/postgres';
 import { config } from 'dotenv';
+import { sql } from '@vercel/postgres';
 
 config();
 
@@ -11,8 +11,8 @@ async function createSchema() {
         serial_number VARCHAR(255) UNIQUE NOT NULL,
         make VARCHAR(255) NOT NULL,
         model VARCHAR(255) NOT NULL,
-        email VARCHAR(255),
-        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        size INTEGER NOT NULL,
+        email VARCHAR(255)
       );
     `;
     console.log('Table "snowboards" created successfully');
