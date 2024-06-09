@@ -76,7 +76,7 @@ const MainForm = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Register or Find Snowboard</h1>
+      <h1 className="text-2xl font-bold mb-4">SnowboardRegistry.com</h1>
       <input
         type="text"
         className="border p-2 mb-4 w-full"
