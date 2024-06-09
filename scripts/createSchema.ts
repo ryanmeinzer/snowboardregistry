@@ -8,11 +8,14 @@ async function createSchema() {
     await sql`
       CREATE TABLE IF NOT EXISTS snowboards (
         id SERIAL PRIMARY KEY,
-        serial_number VARCHAR(255) UNIQUE NOT NULL,
+        serial_number INTEGER UNIQUE NOT NULL,
         make VARCHAR(255) NOT NULL,
         model VARCHAR(255) NOT NULL,
         size INTEGER NOT NULL,
-        email VARCHAR(255)
+        email VARCHAR(255),
+        claimed BOOLEAN DEFAULT FALSE,
+        found BOOLEAN DEFAULT FALSE,
+        found_by VARCHAR(255)
       );
     `;
     console.log('Table "snowboards" created successfully');

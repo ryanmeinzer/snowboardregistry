@@ -6,12 +6,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const result = await sql`
-      INSERT INTO snowboards (serial_number, make, model, size, email)
-      VALUES (${serial_number}, ${make}, ${model}, ${size}, ${email})
+      INSERT INTO snowboards (serial_number, make, model, size, email, claimed)
+      VALUES (${serial_number}, ${make}, ${model}, ${size}, ${email}, TRUE)
       RETURNING *
     `;
     return NextResponse.json(result.rows[0], { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: 'Error registering snowboard' }, { status: 500 });
+    return NextResponse.json({ error: 'Error registering and claiming snowboard' }, { status: 500 });
   }
 }

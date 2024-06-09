@@ -3,11 +3,14 @@
 import { useState } from 'react';
 
 interface Snowboard {
-  serial_number: string;
+  serial_number: number;
   make: string;
   model: string;
   size: number;
   email: string | null;
+  claimed: boolean;
+  found: boolean;
+  found_by: string | null;
 }
 
 const MainForm = () => {
@@ -17,50 +20,57 @@ const MainForm = () => {
   const [size, setSize] = useState('');
   const [email, setEmail] = useState('');
   const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
-  const [notFound, setNotFound] = useState(false); // Track if snowboard is not found
-  const [showSubmit, setShowSubmit] = useState(true); // Track if the submit button should be shown
+  const [found, setFound] = useState<boolean | null>(null); // Track if snowboard is found
+  const [showSearch, setShowSearch] = useState(true); // Track if the search button should be shown
   const [isSerialDisabled, setIsSerialDisabled] = useState(false); // Track if the serial number field should be disabled
 
-  const handleSerialSubmit = async () => {
+  const handleSerialSearch = async () => {
     const response = await fetch(`/api/snowboard/${serial}`);
     if (response.status === 200) {
       const data: Snowboard = await response.json();
       setSnowboard(data);
-      setNotFound(false); // Reset not found state
+      setFound(true); // Set found state
       setIsSerialDisabled(true); // Disable the serial number field
     } else {
       setSnowboard(null);
-      setNotFound(true); // Set not found state
+      setFound(false); // Reset found state
+      setIsSerialDisabled(true); // Disable the serial number field
     }
-    setShowSubmit(false); // Hide the submit button
+    setShowSearch(false); // Hide the search button
   };
 
   const handleRegister = async () => {
     await fetch('/api/snowboard/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serial_number: serial, make, model, size: parseInt(size), email }),
+      body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), email }),
     });
-    alert('Snowboard registered successfully');
+    alert('Snowboard registered and claimed successfully');
   };
 
-  const handleUpdateEmail = async () => {
-    await fetch('/api/snowboard/updateEmail', {
+  const handleClaim = async () => {
+    await fetch('/api/snowboard/claim', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serial_number: serial, email }),
+      body: JSON.stringify({ serial_number: parseInt(serial), email }),
     });
-    alert('Email updated successfully');
+    alert('Snowboard claimed successfully');
   };
 
   const handleFound = async () => {
-    if (snowboard?.email) {
-      await fetch('/api/snowboard/found', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ serial_number: serial }),
-      });
-      alert(`Notification sent to ${snowboard.email}`);
+    await fetch('/api/snowboard/found', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ serial_number: parseInt(serial), found_by: email }),
+    });
+    alert(`Notification sent to ${snowboard?.email || 'the registered owner'}`);
+  };
+
+  // Handle input change for serial number to allow only numeric characters
+  const handleSerialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setSerial(value);
     }
   };
 
@@ -72,14 +82,14 @@ const MainForm = () => {
         className="border p-2 mb-4 w-full"
         placeholder="Serial Number"
         value={serial}
-        onChange={(e) => setSerial(e.target.value)}
+        onChange={handleSerialChange}
         disabled={isSerialDisabled} // Disable the serial number field if needed
       />
-      {showSubmit && (
-        <button className="bg-blue-500 text-white p-2 mb-4" onClick={handleSerialSubmit}>Submit</button>
+      {showSearch && (
+        <button className="bg-blue-500 text-white p-2 mb-4" onClick={handleSerialSearch}>Search</button>
       )}
-      
-      {notFound && (
+
+      {found === false && (
         <>
           <input
             type="text"
@@ -109,11 +119,12 @@ const MainForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button className="bg-blue-500 text-white p-2" onClick={handleRegister}>Register</button>
+          <button className="bg-blue-500 text-white p-2" onClick={handleRegister} disabled={!email}>Register & Claim</button>
+          <button className="bg-blue-500 text-white p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
         </>
       )}
 
-      {snowboard && (
+      {found === true && snowboard && (
         <>
           <input
             type="text"
@@ -143,11 +154,13 @@ const MainForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {snowboard.email ? (
-            <button className="bg-blue-500 text-white p-2" onClick={handleFound} disabled={!email}>Found</button>
+          {snowboard.claimed ? (
+            <>
+              <button className="bg-blue-500 text-white p-2" onClick={handleFound} disabled={!email}>Found</button>
+            </>
           ) : (
             <>
-              <button className="bg-blue-500 text-white p-2" onClick={handleUpdateEmail} disabled={!email}>Register</button>
+              <button className="bg-blue-500 text-white p-2" onClick={handleClaim} disabled={!email}>Claim</button>
               <button className="bg-blue-500 text-white p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
             </>
           )}
