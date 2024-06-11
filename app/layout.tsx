@@ -1,27 +1,30 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+import { Metadata } from 'next'
 
-export const metadata = {
-  metadataBase: new URL('https://postgres-starter.vercel.app'),
-  title: 'Vercel Postgres Demo',
-  description:
-    'A simple Next.js app with Vercel Postgres as the database',
+export const metadata: Metadata = {
+  title: {
+    default: 'Secure Your Snowboard.',
+    template: `%s - Secure Your Snowboard.`
+  },
+  keywords: ['snowboard registry', 'snowboard theft prevention', 'snowboard recovery', 'snowboard serial number', 'stolen snowboards', 'lost snowboards', 'snowboard registration', 'snowboard tracking', 'snowboard protection', 'snowboard identification'],
+  creator: 'Ryan Meinzer',
+  description: 'Secure your snowboard with SnowboardRegistry.com. Prevent theft and recover lost or stolen boards with our serial number tracking and identification system.',
+  // openGraph: {
+  //   images: [{
+  //     url: "/splash-2.jpg",
+  //   }],
+  // },
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon-16x16.png',
+    apple: '/apple-touch-icon.png'
+  }
 }
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>{children}</body>
+      <body>{children}</body>
     </html>
-  )
+  );
 }

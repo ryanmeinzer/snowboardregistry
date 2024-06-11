@@ -76,7 +76,7 @@ const MainForm = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">SnowboardRegistry.com</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Snowboard Registry</h1>
       <input
         type="text"
         className="border p-2 mb-4 w-full"
@@ -86,7 +86,7 @@ const MainForm = () => {
         disabled={isSerialDisabled} // Disable the serial number field if needed
       />
       {showSearch && (
-        <button className="bg-blue-500 text-white p-2 mb-4" onClick={handleSerialSearch}>Search</button>
+        <button className="bg-white text-black p-2 mb-4" onClick={handleSerialSearch}>Search</button>
       )}
 
       {found === false && (
@@ -119,8 +119,8 @@ const MainForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button className="bg-blue-500 text-white p-2" onClick={handleRegister} disabled={!email}>Register & Claim</button>
-          <button className="bg-blue-500 text-white p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
+          <button className="bg-white text-black p-2" onClick={handleRegister} disabled={!email}>Register & Claim</button>
+          <button className="bg-white text-black p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
         </>
       )}
 
@@ -156,12 +156,12 @@ const MainForm = () => {
           />
           {snowboard.claimed ? (
             <>
-              <button className="bg-blue-500 text-white p-2" onClick={handleFound} disabled={!email}>Found</button>
+              <button className="bg-white text-black p-2" onClick={handleFound} disabled={!email}>Found</button>
             </>
           ) : (
             <>
-              <button className="bg-blue-500 text-white p-2" onClick={handleClaim} disabled={!email}>Claim</button>
-              <button className="bg-blue-500 text-white p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
+              <button className="bg-white text-black p-2" onClick={handleClaim} disabled={!email}>Claim</button>
+              <button className="bg-white text-black p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
             </>
           )}
         </>
