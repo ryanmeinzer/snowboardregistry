@@ -1,39 +1,45 @@
----
-name: Vercel Postgres Next.js Starter
-slug: postgres-starter
-description: Simple Next.js template that uses Vercel Postgres as the database.
-framework: Next.js
-useCase: Starter
-css: Tailwind
-database: Vercel Postgres
-deployUrl: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fstorage%2Fpostgres-starter&project-name=postgres-starter&repository-name=postgres-starter&demo-title=Vercel%20Postgres%20Next.js%20Starter&demo-description=Simple%20Next.js%20template%20that%20uses%20Vercel%20Postgres%20as%20the%20database.&demo-url=https%3A%2F%2Fpostgres-starter.vercel.app%2F&demo-image=https%3A%2F%2Fpostgres-starter.vercel.app%2Fopengraph-image.png&stores=%5B%7B"type"%3A"postgres"%7D%5D
-demoUrl: https://postgres-starter.vercel.app/
-relatedTemplates:
-  - postgres-prisma
-  - postgres-kysely
-  - postgres-sveltekit
----
+# Material UI - Next.js App Router example in TypeScript
 
-# Vercel Postgres Next.js Starter
+This is a [Next.js](https://nextjs.org/) project bootstrapped using [`create-next-app`](https://github.com/vercel/next.js/tree/HEAD/packages/create-next-app) with Material UI installed.
 
-Simple Next.js template that uses [Vercel Postgres](https://vercel.com/postgres) as the database.
+## How to use
 
-Next, run Next.js in development mode:
+Download the example [or clone the repo](https://github.com/mui/material-ui):
+
+<!-- #default-branch-switch -->
 
 ```bash
-pnpm dev
+curl https://codeload.github.com/mui/material-ui/tar.gz/master | tar -xz --strip=2  material-ui-master/examples/material-ui-nextjs-ts
+cd material-ui-nextjs-ts
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples) ([Documentation](https://nextjs.org/docs/deployment)).
+Install it and run:
 
-To interact with Vercel PG in CLI (secret hidden):
+```bash
+npm install
+npm run dev
+```
 
-```
-psql "postgres://default:************@ep-morning-sky-a4gu1riu.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&options=endpoint%3Dep-morning-sky-a4gu1riu"
-```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To run script for psql:
+or:
 
-```
-pnpm ts-node --project tsconfig.scripts.json scripts/[script file]
-```
+<!-- #default-branch-switch -->
+
+[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
+
+[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/master/examples/material-ui-nextjs-ts)
+
+## Learn more
+
+To learn more about this example:
+
+- [Next.js documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Customizing Material UI](https://mui.com/material-ui/customization/how-to-customize/) - approaches to customizing Material UI.
+
+## What's next?
+
+<!-- #default-branch-switch -->
+
+You now have a working example project.
+You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
