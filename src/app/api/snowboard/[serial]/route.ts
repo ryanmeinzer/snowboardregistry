@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const result = await sql`
       SELECT * FROM snowboards WHERE serial_number = ${serial}
     `;
-    if (result.rowCount > 0) {
+    if (result.rowCount !== null && result.rowCount > 0) {
       return NextResponse.json(result.rows[0]);
     } else {
       return NextResponse.json({ message: 'Snowboard not found' }, { status: 404 });
