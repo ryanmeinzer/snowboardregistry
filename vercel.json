@@ -1,0 +1,13 @@
+{
+    "root": "material-ui-nextjs-ts",
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/next"
+      }
+    ],
+    "routes": [
+      {"src": "/(.*)", "dest": "/"}
+    ]
+  }
+  
