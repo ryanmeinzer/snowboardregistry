@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 interface Snowboard {
   serial_number: number;
@@ -75,98 +80,125 @@ const MainForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Snowboard Registry</h1>
-      <input
-        type="text"
-        className="border p-2 mb-4 w-full"
-        placeholder="Serial Number"
-        value={serial}
-        onChange={handleSerialChange}
-        disabled={isSerialDisabled} // Disable the serial number field if needed
-      />
-      {showSearch && (
-        <button className="bg-white text-black p-2 mb-4" onClick={handleSerialSearch}>Search</button>
-      )}
+    <Container maxWidth="sm">
+      <Box sx={{ my: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography variant="h4" gutterBottom>
+          Snowboard Registry
+        </Typography>
+        <TextField
+          fullWidth
+          label="Serial Number"
+          variant="outlined"
+          value={serial}
+          onChange={handleSerialChange}
+          disabled={isSerialDisabled}
+          sx={{ mb: 2 }}
+        />
+        {showSearch && (
+          <Button variant="contained" onClick={handleSerialSearch} sx={{ mb: 2 }}>
+            Search
+          </Button>
+        )}
 
-      {found === false && (
-        <>
-          <input
-            type="text"
-            className="border p-2 mb-4 w-full"
-            placeholder="Make"
-            value={make}
-            onChange={(e) => setMake(e.target.value)}
-          />
-          <input
-            type="text"
-            className="border p-2 mb-4 w-full"
-            placeholder="Model"
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-          />
-          <input
-            type="number"
-            className="border p-2 mb-4 w-full"
-            placeholder="Size"
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-          />
-          <input
-            type="email"
-            className="border p-2 mb-4 w-full"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button className="bg-white text-black p-2" onClick={handleRegister} disabled={!email}>Register & Claim</button>
-          <button className="bg-white text-black p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
-        </>
-      )}
+        {found === false && (
+          <>
+            <TextField
+              fullWidth
+              label="Make"
+              variant="outlined"
+              value={make}
+              onChange={(e) => setMake(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Model"
+              variant="outlined"
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Size"
+              type="number"
+              variant="outlined"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button variant="contained" onClick={handleRegister} disabled={!email} sx={{ mb: 2 }}>
+              Register & Claim
+            </Button>
+            <Button variant="contained" onClick={handleFound} disabled={!email} >
+              Found
+            </Button>
+          </>
+        )}
 
-      {found === true && snowboard && (
-        <>
-          <input
-            type="text"
-            className="border p-2 mb-4 w-full"
-            placeholder="Make"
-            value={snowboard.make}
-            disabled
-          />
-          <input
-            type="text"
-            className="border p-2 mb-4 w-full"
-            placeholder="Model"
-            value={snowboard.model}
-            disabled
-          />
-          <input
-            type="number"
-            className="border p-2 mb-4 w-full"
-            placeholder="Size"
-            value={snowboard.size}
-            disabled
-          />
-          <input
-            type="email"
-            className="border p-2 mb-4 w-full"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {snowboard.claimed ? (
-            <>
-              <button className="bg-white text-black p-2" onClick={handleFound} disabled={!email}>Found</button>
-            </>
-          ) : (
-            <>
-              <button className="bg-white text-black p-2" onClick={handleClaim} disabled={!email}>Claim</button>
-              <button className="bg-white text-black p-2 ml-2" onClick={handleFound} disabled={!email}>Found</button>
-            </>
-          )}
-        </>
-      )}
-    </div>
+        {found === true && snowboard && (
+          <>
+            <TextField
+              fullWidth
+              label="Make"
+              variant="outlined"
+              value={snowboard.make}
+              disabled
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Model"
+              variant="outlined"
+              value={snowboard.model}
+              disabled
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Size"
+              type="number"
+              variant="outlined"
+              value={snowboard.size}
+              disabled
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            {snowboard.claimed ? (
+              <Button variant="contained" onClick={handleFound} disabled={!email}>
+                Found
+              </Button>
+            ) : (
+              <>
+                <Button variant="contained" onClick={handleClaim} disabled={!email} sx={{ mb: 2 }}>
+                  Claim
+                </Button>
+                <Button variant="contained" onClick={handleFound} disabled={!email}>
+                  Found
+                </Button>
+              </>
+            )}
+          </>
+        )}
+      </Box>
+    </Container>
   );
 };
 
