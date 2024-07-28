@@ -1,7 +1,5 @@
-import { config } from 'dotenv';
+import 'dotenv/config'
 import { sql } from '@vercel/postgres';
-
-config();
 
 async function dropTable() {
   try {
