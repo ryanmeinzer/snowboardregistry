@@ -43,3 +43,13 @@ To learn more about this example:
 
 You now have a working example project.
 You can head back to the documentation and continue by browsing the [templates](https://mui.com/material-ui/getting-started/templates/) section.
+
+To interact with Vercel PG in CLI (secret hidden):
+
+```
+psql "postgres://default:************@ep-morning-sky-a4gu1riu.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require&options=endpoint%3Dep-morning-sky-a4gu1riu"
+```
+
+To run script for psql:
+
+```pnpm ts-node --project tsconfig.scripts.json scripts/[script file]```
