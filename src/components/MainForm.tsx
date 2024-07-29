@@ -106,7 +106,7 @@ const MainForm = () => {
           sx={{ mb: 2 }}
         />
         {showSearch && (
-          <Button variant="contained" onClick={handleSerialSearch} sx={{ mb: 2 }}>
+          <Button variant="contained" onClick={handleSerialSearch} disabled={!serial} sx={{ mb: 2 }}>
             Search
           </Button>
         )}
