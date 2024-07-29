@@ -71,14 +71,6 @@ const MainForm = () => {
     alert(`Notification sent to ${snowboard?.email || 'the registered owner'}`);
   };
 
-  // Handle input change for serial number to allow only numeric characters
-  const handleSerialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      setSerial(value);
-    }
-  };
-
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -88,9 +80,10 @@ const MainForm = () => {
         <TextField
           fullWidth
           label="Serial Number"
+          type="number"
           variant="outlined"
           value={serial}
-          onChange={handleSerialChange}
+          onChange={(e) => setSerial(e.target.value)}
           disabled={isSerialDisabled}
           sx={{ mb: 2 }}
         />
