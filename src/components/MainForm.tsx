@@ -24,6 +24,7 @@ const MainForm = () => {
   const [model, setModel] = useState('');
   const [size, setSize] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
   const [found, setFound] = useState<boolean | null>(null); // Track if snowboard is found
   const [showSearch, setShowSearch] = useState(true); // Track if the search button should be shown
@@ -43,6 +44,23 @@ const MainForm = () => {
     }
     setShowSearch(false); // Hide the search button
   };
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/; // Simplified regex for demonstration
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const emailInput = e.target.value;
+    setEmail(emailInput);
+    if (!validateEmail(emailInput) && emailInput.length > 0) {
+      setEmailError('Please enter a valid email address.');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const isButtonDisabled = !email || !!emailError; // This will ensure the result is always boolean
 
   const handleRegister = async () => {
     await fetch('/api/snowboard/register', {
@@ -126,13 +144,15 @@ const MainForm = () => {
               type="email"
               variant="outlined"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              error={!!emailError}
+              helperText={emailError}
               sx={{ mb: 2 }}
             />
-            <Button variant="contained" onClick={handleRegister} disabled={!email} sx={{ mb: 2 }}>
+            <Button variant="contained" onClick={handleRegister} disabled={isButtonDisabled} sx={{ mb: 2 }}>
               Register & Claim
             </Button>
-            <Button variant="contained" onClick={handleFound} disabled={!email} >
+            <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled} >
               Found
             </Button>
           </>
@@ -171,19 +191,21 @@ const MainForm = () => {
               type="email"
               variant="outlined"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailChange}
+              error={!!emailError}
+              helperText={emailError}
               sx={{ mb: 2 }}
             />
             {snowboard.claimed ? (
-              <Button variant="contained" onClick={handleFound} disabled={!email}>
+              <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled}>
                 Found
               </Button>
             ) : (
               <>
-                <Button variant="contained" onClick={handleClaim} disabled={!email} sx={{ mb: 2 }}>
+                <Button variant="contained" onClick={handleClaim} disabled={isButtonDisabled} sx={{ mb: 2 }}>
                   Claim
                 </Button>
-                <Button variant="contained" onClick={handleFound} disabled={!email}>
+                <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled}>
                   Found
                 </Button>
               </>
