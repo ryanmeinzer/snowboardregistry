@@ -100,7 +100,7 @@ const MainForm = () => {
     await fetch('/api/snowboard/found', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serial_number: parseInt(serial), found_by: email }),
+      body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), found_by: email }),
     });
     alert(`Notification sent to ${snowboard?.email || 'the registered owner'}`);
   };
