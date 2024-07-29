@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
 
 interface Snowboard {
   serial_number: number;
@@ -19,6 +20,7 @@ interface Snowboard {
 }
 
 const MainForm = () => {
+  const theme = useTheme();
   const [serial, setSerial] = useState('');
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
@@ -29,7 +31,21 @@ const MainForm = () => {
   const [found, setFound] = useState<boolean | null>(null); // Track if snowboard is found
   const [showSearch, setShowSearch] = useState(true); // Track if the search button should be shown
   const [isSerialDisabled, setIsSerialDisabled] = useState(false); // Track if the serial number field should be disabled
+  const [isSerialFocused, setIsSerialFocused] = useState(false);
 
+  const glowStyle = {
+    animation: 'glow 1.5s ease-in-out infinite',
+    '@keyframes glow': {
+      '0%, 100%': {
+        boxShadow: `0 0 5px ${theme.palette.primary.main}`,
+      },
+      '50%': {
+        boxShadow: `0 0 20px ${theme.palette.primary.main}`,
+      }
+    },
+    borderRadius: '5px', // Border radius to make edges rounded
+  };
+  
   const handleSerialSearch = async () => {
     const response = await fetch(`/api/snowboard/${serial}`);
     if (response.status === 200) {
@@ -103,7 +119,11 @@ const MainForm = () => {
           value={serial}
           onChange={(e) => setSerial(e.target.value)}
           disabled={isSerialDisabled}
-          sx={{ mb: 2 }}
+          onFocus={() => setIsSerialFocused(true)}
+          sx={{
+            mb: 2,
+            ...(serial === '' && !isSerialDisabled && !isSerialFocused ? glowStyle : {})
+          }}
         />
         {showSearch && (
           <Button variant="contained" onClick={handleSerialSearch} disabled={!serial} sx={{ mb: 2 }}>
