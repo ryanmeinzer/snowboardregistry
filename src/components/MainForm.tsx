@@ -97,11 +97,20 @@ const MainForm = () => {
   };
 
   const handleFound = async () => {
+    const foundData = {
+      serial_number: parseInt(serial), // Ensure 'serial' is a string that can be converted
+      found_by: email,
+      make: make || undefined, // Include 'make' only if it's truthy
+      model: model || undefined, // Include 'model' only if it's truthy
+      size: size ? parseInt(size) : undefined, // Convert 'size' to an integer if it exists
+    };
+  
     await fetch('/api/snowboard/found', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), found_by: email }),
+      body: JSON.stringify(foundData),
     });
+  
     alert(`Notification sent to ${snowboard?.email || 'the registered owner'}`);
   };
 
