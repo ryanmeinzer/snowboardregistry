@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
 
 interface Snowboard {
   serial_number: number;
@@ -241,6 +242,12 @@ const MainForm = () => {
             )}
           </>
         )}
+      </Box>
+      <Box>
+        <Divider />
+        <Typography color="text.secondary" variant="body2" mt={2} align='center'>
+          Register to guard against theft and help return lost or found snowboards.  
+        </Typography>
       </Box>
     </Container>
   );
