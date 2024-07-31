@@ -186,7 +186,8 @@ const MainForm = () => {
               />
               <TextField
                 fullWidth
-                label="Email"
+                // label="Email"
+                label={snowboardHasRegisteredEmail ? "Email (updated)" : "Email"}
                 type="email"
                 variant="outlined"
                 value={email}
