@@ -9,6 +9,8 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 interface Snowboard {
   serial_number: number;
@@ -32,6 +34,8 @@ const MainForm = () => {
   const [showSearch, setShowSearch] = useState(true); // Track if the search button should be shown
   const [isSerialDisabled, setIsSerialDisabled] = useState(false); // Track if the serial number field should be disabled
   const [isSerialFocused, setIsSerialFocused] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const glowStyle = {
     animation: 'glow 1.5s ease-in-out infinite',
@@ -48,7 +52,6 @@ const MainForm = () => {
   
   useEffect(() => {
     if (snowboard) {
-      // setSerial(snowboard.serial_number.toString() || '')
       setMake(snowboard.make || ''); 
       setModel(snowboard.model || '');
       setSize(snowboard.size.toString() || '');
@@ -62,7 +65,6 @@ const MainForm = () => {
       setSnowboard(data);
       setIsSerialDisabled(true); // Disable the serial number field
     } else {
-      // alert("No snowboard found. Register it!");
       setSnowboard(null);
       setIsSerialDisabled(true); // Disable the serial number field
     }
@@ -86,13 +88,24 @@ const MainForm = () => {
 
   const isButtonDisabled = !email || !!emailError; // ensures result is always boolean
 
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   const handleRegister = async () => {
     await fetch('/api/snowboard/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), email }),
     });
-    alert('Snowboard registered successfully');
+    setSnackbarMessage('Snowboard registered successfully!');
+    setOpenSnackbar(true)
   };
 
   const handleFound = async () => {
@@ -109,8 +122,8 @@ const MainForm = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(foundData),
     });
-  
-    alert(`Notification sent to the registered owner`);
+    setSnackbarMessage("Thank you! We've sent a notification to the registered owner's email.");
+    setOpenSnackbar(true)
   };
 
   return (
@@ -188,6 +201,11 @@ const MainForm = () => {
                     <Button variant="contained" onClick={handleRegister} disabled={isButtonDisabled}>
                       Register
                     </Button>
+                    <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} >
+                      <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" >
+                        {snackbarMessage}
+                      </Alert>
+                    </Snackbar>
                   </Grid>
                   <Grid item>
                     <Typography>
@@ -198,6 +216,11 @@ const MainForm = () => {
                     <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled} >
                       Found
                     </Button>
+                    <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} >
+                      <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" >
+                        {snackbarMessage}
+                      </Alert>
+                    </Snackbar>
                   </Grid>
                 </Grid>
               </Box>
