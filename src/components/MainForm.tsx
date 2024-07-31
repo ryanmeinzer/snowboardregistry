@@ -36,6 +36,7 @@ const MainForm = () => {
   const [isSerialFocused, setIsSerialFocused] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snowboardHasRegisteredEmail, setSnowboardHasRegisteredEmail] = useState(false);
 
   const glowStyle = {
     animation: 'glow 1.5s ease-in-out infinite',
@@ -68,6 +69,7 @@ const MainForm = () => {
       const data: Snowboard = await response.json();
       setSnowboard(data);
       setIsSerialDisabled(true); // Disable the serial number field
+      data.email && setSnowboardHasRegisteredEmail(true)
     } else {
       setSnowboard(null);
       setIsSerialDisabled(true); // Disable the serial number field
@@ -108,7 +110,7 @@ const MainForm = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), email }),
     });
-    setSnackbarMessage('Snowboard registered successfully!');
+    snowboardHasRegisteredEmail ? setSnackbarMessage('Snowboard registry updated!') : setSnackbarMessage('Snowboard registered!');
     setOpenSnackbar(true)
   };
 
