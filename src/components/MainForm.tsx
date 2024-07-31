@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -8,6 +8,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 
 interface Snowboard {
   serial_number: number;
@@ -15,8 +16,7 @@ interface Snowboard {
   model: string;
   size: number;
   email: string | null;
-  claimed: boolean;
-  found: boolean;
+  indexed: boolean;
   found_by: string | null;
 }
 
@@ -29,7 +29,6 @@ const MainForm = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const [snowboard, setSnowboard] = useState<Snowboard | null>(null);
-  const [found, setFound] = useState<boolean | null>(null); // Track if snowboard is found
   const [showSearch, setShowSearch] = useState(true); // Track if the search button should be shown
   const [isSerialDisabled, setIsSerialDisabled] = useState(false); // Track if the serial number field should be disabled
   const [isSerialFocused, setIsSerialFocused] = useState(false);
@@ -44,26 +43,34 @@ const MainForm = () => {
         boxShadow: `0 0 20px ${theme.palette.primary.main}`,
       }
     },
-    borderRadius: '5px', // Border radius to make edges rounded
+    borderRadius: '5px',
   };
   
+  useEffect(() => {
+    if (snowboard) {
+      // setSerial(snowboard.serial_number.toString() || '')
+      setMake(snowboard.make || ''); 
+      setModel(snowboard.model || '');
+      setSize(snowboard.size.toString() || '');
+    }
+  }, [snowboard]);
+
   const handleSerialSearch = async () => {
     const response = await fetch(`/api/snowboard/${serial}`);
     if (response.status === 200) {
       const data: Snowboard = await response.json();
       setSnowboard(data);
-      setFound(true); // Set found state
       setIsSerialDisabled(true); // Disable the serial number field
     } else {
+      // alert("No snowboard found. Register it!");
       setSnowboard(null);
-      setFound(false); // Reset found state
       setIsSerialDisabled(true); // Disable the serial number field
     }
     setShowSearch(false); // Hide the search button
   };
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/; // Simplified regex for demonstration
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/; // Simplified regex for email validation
     return emailRegex.test(email);
   };
 
@@ -77,7 +84,7 @@ const MainForm = () => {
     }
   };
 
-  const isButtonDisabled = !email || !!emailError; // This will ensure the result is always boolean
+  const isButtonDisabled = !email || !!emailError; // ensures result is always boolean
 
   const handleRegister = async () => {
     await fetch('/api/snowboard/register', {
@@ -85,16 +92,7 @@ const MainForm = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ serial_number: parseInt(serial), make, model, size: parseInt(size), email }),
     });
-    alert('Snowboard registered and claimed successfully');
-  };
-
-  const handleClaim = async () => {
-    await fetch('/api/snowboard/claim', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ serial_number: parseInt(serial), email }),
-    });
-    alert('Snowboard claimed successfully');
+    alert('Snowboard registered successfully');
   };
 
   const handleFound = async () => {
@@ -112,7 +110,7 @@ const MainForm = () => {
       body: JSON.stringify(foundData),
     });
   
-    alert(`Notification sent to ${snowboard?.email || 'the registered owner'}`);
+    alert(`Notification sent to the registered owner`);
   };
 
   return (
@@ -135,118 +133,82 @@ const MainForm = () => {
             ...(serial === '' && !isSerialDisabled && !isSerialFocused ? glowStyle : {})
           }}
         />
-        {showSearch && (
-          <Button variant="contained" onClick={handleSerialSearch} disabled={!serial} sx={{ mb: 2 }}>
-            Search
-          </Button>
-        )}
-
-        {found === false && (
-          <>
-            <TextField
-              fullWidth
-              label="Make"
-              variant="outlined"
-              value={make}
-              onChange={(e) => setMake(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Model"
-              variant="outlined"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Size"
-              type="number"
-              variant="outlined"
-              value={size}
-              onChange={(e) => setSize(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={email}
-              onChange={handleEmailChange}
-              error={!!emailError}
-              helperText={emailError}
-              sx={{ mb: 2 }}
-            />
-            <Button variant="contained" onClick={handleRegister} disabled={isButtonDisabled} sx={{ mb: 2 }}>
-              Register & Claim
+        {
+          showSearch ? (
+            <Button variant="contained" onClick={handleSerialSearch} disabled={!serial} sx={{ mb: 2 }}>
+              Search
             </Button>
-            <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled} >
-              Found
-            </Button>
-          </>
-        )}
-
-        {found === true && snowboard && (
-          <>
-            <TextField
-              fullWidth
-              label="Make"
-              variant="outlined"
-              value={snowboard.make}
-              disabled
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Model"
-              variant="outlined"
-              value={snowboard.model}
-              disabled
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Size"
-              type="number"
-              variant="outlined"
-              value={snowboard.size}
-              disabled
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={email}
-              onChange={handleEmailChange}
-              error={!!emailError}
-              helperText={emailError}
-              sx={{ mb: 2 }}
-            />
-            {snowboard.claimed ? (
-              <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled}>
-                Found
-              </Button>
-            ) : (
-              <>
-                <Button variant="contained" onClick={handleClaim} disabled={isButtonDisabled} sx={{ mb: 2 }}>
-                  Claim
-                </Button>
-                <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled}>
-                  Found
-                </Button>
-              </>
-            )}
-          </>
-        )}
+          ) : (
+            <>
+              <TextField
+                fullWidth
+                label="Make"
+                variant="outlined"
+                value={make}
+                onChange={(e) => setMake(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Model"
+                variant="outlined"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Size"
+                type="number"
+                variant="outlined"
+                value={size}
+                onChange={(e) => setSize(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={handleEmailChange}
+                error={!!emailError}
+                helperText={emailError}
+                sx={{ mb: 2 }}
+              />
+              <Box>
+                <Grid
+                  container
+                  spacing={4}
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    <Button variant="contained" onClick={handleRegister} disabled={isButtonDisabled}>
+                      Register
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      or
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled} >
+                      Found
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </>
+          )
+        }
       </Box>
       <Box>
         <Divider />
         <Typography color="text.secondary" variant="body2" mt={2} align='center'>
-          Register to guard against theft and help return lost or found snowboards.  
+          Register to guard against theft and help recover lost or found snowboards.  
         </Typography>
       </Box>
     </Container>

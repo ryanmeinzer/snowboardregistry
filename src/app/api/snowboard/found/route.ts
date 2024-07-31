@@ -9,10 +9,10 @@ export async function POST(req: NextRequest) {
 
     // Update the snowboard if it exists, otherwise, create a new record with all available fields
     const result = await sql`
-      INSERT INTO snowboards (serial_number, found, found_by, make, model, size)
-      VALUES (${serial_number}, TRUE, ${found_by}, ${make}, ${model}, ${size})
+      INSERT INTO snowboards (serial_number, found_by, make, model, size)
+      VALUES (${serial_number}, ${found_by}, ${make}, ${model}, ${size})
       ON CONFLICT (serial_number) DO UPDATE
-      SET found = TRUE, found_by = ${found_by}, make = COALESCE(EXCLUDED.make, snowboards.make), model = COALESCE(EXCLUDED.model, snowboards.model), size = COALESCE(EXCLUDED.size, snowboards.size)
+      SET found_by = ${found_by}, make = COALESCE(EXCLUDED.make, snowboards.make), model = COALESCE(EXCLUDED.model, snowboards.model), size = COALESCE(EXCLUDED.size, snowboards.size)
       RETURNING *
     `;
     console.log('Database response:', result.rows[0]);

@@ -23,7 +23,8 @@
     "postgresql": "^0.0.1",
     "psql": "^0.0.1",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
