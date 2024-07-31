@@ -54,7 +54,11 @@ const MainForm = () => {
     if (snowboard) {
       setMake(snowboard.make || ''); 
       setModel(snowboard.model || '');
-      setSize(snowboard.size.toString() || '');
+      if (snowboard.size != null) {
+        setSize(snowboard.size.toString());
+      } else {
+        setSize('');
+      }
     }
   }, [snowboard]);
 
