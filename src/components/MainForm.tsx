@@ -11,6 +11,8 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Badge from '@mui/material/Badge';
+import SnowboardingIcon from '@mui/icons-material/Snowboarding';
 
 interface Snowboard {
   serial_number: number;
@@ -37,6 +39,21 @@ const MainForm = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snowboardHasRegisteredEmail, setSnowboardHasRegisteredEmail] = useState(false);
+  const [savedCount, setSavedCount] = useState(0);
+
+  useEffect(() => {
+    const fetchSavedCount = async () => {
+      try {
+        const response = await fetch('/api/snowboard/foundCount', { method: 'POST' });
+        const data = await response.json();
+        setSavedCount(data.count);
+      } catch (error) {
+        console.error('Error fetching saved count:', error);
+      }
+    };
+
+    fetchSavedCount();
+  }, []);
 
   const glowStyle = {
     animation: 'glow 1.5s ease-in-out infinite',
@@ -240,6 +257,22 @@ const MainForm = () => {
         <Typography color="text.secondary" variant="body2" mt={2} align='center'>
           Register to guard against theft and help recover lost or found snowboards.  
         </Typography>
+        <Box display="flex" justifyContent="center" alignItems="center" width="100%" mt={4}>
+          <Badge
+            badgeContent={savedCount}
+            color="primary"
+            sx={{
+              '& .MuiBadge-badge': {
+                right: -8,
+              },
+            }}
+          >
+            <SnowboardingIcon />
+          </Badge>
+          <Typography color="text.secondary" sx={{ marginLeft: 3 }}>
+            snowboards saved
+          </Typography>
+        </Box>
       </Box>
     </Container>
   );
