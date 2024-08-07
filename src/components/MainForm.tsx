@@ -259,17 +259,18 @@ const MainForm = () => {
         </Typography>
         <Box display="flex" justifyContent="center" alignItems="center" width="100%" mt={4}>
           <Badge
-            badgeContent={savedCount + 100}
+            badgeContent={(Number(100) + Number(savedCount))}
+            max={999}
             color="primary"
             sx={{
               '& .MuiBadge-badge': {
-                right: -8,
+                right: -15,
               },
             }}
           >
             <SnowboardingIcon />
           </Badge>
-          <Typography color="text.secondary" sx={{ marginLeft: 3 }}>
+          <Typography color="text.secondary" sx={{ marginLeft: 5 }}>
             snowboards found
           </Typography>
         </Box>
