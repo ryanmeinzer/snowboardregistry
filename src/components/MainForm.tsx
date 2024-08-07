@@ -270,7 +270,7 @@ const MainForm = () => {
           >
             <SnowboardingIcon />
           </Badge>
-          <Typography color="text.secondary" sx={{ marginLeft: 5 }}>
+          <Typography color="text.secondary" sx={{ marginLeft: 4.5 }}>
             snowboards found
           </Typography>
         </Box>
