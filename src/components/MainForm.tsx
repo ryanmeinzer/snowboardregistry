@@ -39,14 +39,14 @@ const MainForm = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snowboardHasRegisteredEmail, setSnowboardHasRegisteredEmail] = useState(false);
-  const [savedCount, setSavedCount] = useState(0);
+  const [savedCount, setSavedCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchSavedCount = async () => {
       try {
         const response = await fetch('/api/snowboard/foundCount', { method: 'POST' });
         const data = await response.json();
-        setSavedCount(data.count);
+        setSavedCount(Number(data.count));
       } catch (error) {
         console.error('Error fetching saved count:', error);
       }
@@ -259,7 +259,7 @@ const MainForm = () => {
         </Typography>
         <Box display="flex" justifyContent="center" alignItems="center" width="100%" mt={4}>
           <Badge
-            badgeContent={(Number(100) + Number(savedCount))}
+            badgeContent={savedCount !== null ? savedCount + 100 : 0}
             max={999}
             color="primary"
             sx={{
