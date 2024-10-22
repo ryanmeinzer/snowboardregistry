@@ -223,7 +223,7 @@ const MainForm = () => {
                 >
                   <Grid item>
                     <Button variant="contained" onClick={handleRegister} disabled={isButtonDisabled}>
-                      Register
+                      Register as Owner
                     </Button>
                     <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} >
                       <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" >
@@ -238,7 +238,7 @@ const MainForm = () => {
                   </Grid>
                   <Grid item>
                     <Button variant="contained" onClick={handleFound} disabled={isButtonDisabled} >
-                      Found
+                      Mark as Found
                     </Button>
                     <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar} >
                       <Alert onClose={handleCloseSnackbar} severity="success" variant="filled" >
